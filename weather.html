@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"href="style.css">
+</head>
+<body>
+    <div class="container">
+    <header>
+   <h2><b>Weather Forcast</b></h2> 
+</header>
+   <main>
+    <input type ="text" id = "location-input"placeholder="enter city or zip code">
+    <button onclick="searchWaether()">Search</button>"
+
+    <div id="Weather info">
+        <h3>Current Weather</h3>
+        <p>Temperature:<span id="temperature">...</span>degree celcius</p>
+        <p>Humidity:<span id="humidity">...</span>%</p>
+        <p>Wind Speed:<span id="wind speed">...</span>km/h</p>
+    </div>
+   </main>
+   <script>
+    const apiKey = 'YOUR_API_KEY';
+    const city = 'London';
+    const apiUrl = https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey};
+
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const weatherContainer = document.getElementById('weather');
+            const city = data.city.name;
+            const forecasts = data.list.slice(0, 5); // Get the first 5 forecasts (3-hour intervals)
+
+            forecasts.forEach(forecast => {
+                const date = new Date(forecast.dt_txt);
+                const day = date.toLocaleDateString('en-US', { weekday: 'long' });
+                const description = forecast.weather[0].description;
+                const temp = forecast.main.temp;
+                const high = forecast.main.temp_max;
+                const low = forecast.main.temp_min;
+
+                const cityDiv = document.createElement('div');
+                cityDiv.classList.add('city');
+                cityDiv.innerHTML = `
+                    <h2>${city}</h2>
+                    <p>${day}</p>
+                    <p>${description}</p>
+                    <p>Temperature: ${temp}°C</p>
+                    <p>High: ${high}°C</p>
+                    <p>Low: ${low}°C</p>
+                    `;
+
+                    weatherContainer.appendChild(cityDiv);
+                });
+            })
+            .catch(error => console.error('Error fetching weather data:', error));
+    </script>
+  
+</body>
+</html>
